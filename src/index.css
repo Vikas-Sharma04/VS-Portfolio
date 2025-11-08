@@ -1,0 +1,259 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Futuristic Color System */
+    --background: 220 25% 8%;
+    --foreground: 210 40% 98%;
+
+    --primary: 195 100% 50%;
+    --primary-foreground: 220 25% 8%;
+
+    --secondary: 270 100% 80%;
+    --secondary-foreground: 220 25% 8%;
+
+    --accent: 320 100% 70%;
+    --accent-foreground: 220 25% 8%;
+
+    --muted: 220 15% 15%;
+    --muted-foreground: 210 40% 70%;
+
+    --card: 220 20% 10%;
+    --card-foreground: 210 40% 98%;
+
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --ring: 195 100% 50%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --popover: 220 20% 12%;
+    --popover-foreground: 210 40% 98%;
+
+    --radius: 0.75rem;
+
+    /* Custom Design Tokens */
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(195, 100%, 50%) 0%,
+      hsl(270, 100%, 80%) 100%
+    );
+    --gradient-secondary: linear-gradient(
+      135deg,
+      hsl(270, 100%, 80%) 0%,
+      hsl(320, 100%, 70%) 100%
+    );
+    --gradient-accent: linear-gradient(
+      135deg,
+      hsl(320, 100%, 70%) 0%,
+      hsl(195, 100%, 50%) 100%
+    );
+
+    --glow-primary: 0 0 30px hsl(195, 100%, 50% / 0.5);
+    --glow-secondary: 0 0 30px hsl(270, 100%, 80% / 0.5);
+    --glow-accent: 0 0 30px hsl(320, 100%, 70% / 0.5);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-space;
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Enhanced Hero Button Variants */
+  .btn-hero {
+    @apply relative px-8 py-4 bg-transparent border-2 border-primary text-primary font-medium rounded-xl;
+    @apply transition-all duration-500 ease-out;
+    @apply hover:bg-primary hover:text-primary-foreground hover:shadow-[var(--glow-primary)];
+    @apply before:absolute before:inset-0 before:rounded-xl before:bg-gradient-to-r before:from-primary/20 before:to-secondary/20;
+    @apply before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100;
+    transform-style: preserve-3d;
+  }
+
+  .btn-secondary {
+    @apply relative px-6 py-3 bg-gradient-to-r from-secondary to-accent text-secondary-foreground;
+    @apply rounded-lg font-medium transition-all duration-300;
+    @apply hover:scale-105 hover:shadow-[var(--glow-secondary)];
+    transform-style: preserve-3d;
+  }
+
+  /* Enhanced Text Variants */
+  .text-hero {
+    @apply text-6xl md:text-8xl font-bold leading-none;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform-style: preserve-3d;
+  }
+
+  .text-section-title {
+    @apply text-4xl md:text-5xl font-bold leading-tight;
+    background: var(--gradient-secondary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 20px hsl(195, 100%, 50% / 0.5);
+  }
+
+  /* Enhanced Card Variants */
+  .card-glass {
+    @apply bg-card/20 backdrop-blur-xl border border-border/50 rounded-2xl;
+    @apply transition-all duration-500 hover:bg-card/30 hover:border-primary/30;
+    box-shadow: 0 8px 32px hsl(220, 25%, 8% / 0.3);
+    transform-style: preserve-3d;
+  }
+
+  .card-project {
+    @apply card-glass p-6 cursor-pointer;
+    @apply hover:scale-105 hover:shadow-[var(--glow-primary)];
+    transform-style: preserve-3d;
+  }
+
+  /* Enhanced Skill Badge */
+  .skill-badge {
+    @apply px-4 py-2 bg-muted/50 border border-border rounded-full text-sm font-medium;
+    @apply transition-all duration-300 hover:bg-primary/20 hover:border-primary/50;
+    @apply hover:scale-110 hover:shadow-[var(--glow-primary)];
+    transform-style: preserve-3d;
+  }
+
+  /* Enhanced Animation Classes */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite alternate;
+  }
+
+  .animate-rotate-slow {
+    animation: rotate-slow 20s linear infinite;
+  }
+
+  .animate-gradient {
+    animation: gradient-shift 3s ease-in-out infinite;
+    background-size: 200% 200%;
+  }
+
+  /* 3D Hover Effects */
+  .hover-3d {
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+  }
+
+  .hover-3d:hover {
+    transform: perspective(1000px) rotateY(10deg) rotateX(5deg);
+  }
+
+  /* Glassmorphism Navigation */
+  .nav-glass {
+    @apply bg-background/10 backdrop-blur-2xl border border-border/20;
+    box-shadow: 0 8px 32px hsl(220, 25%, 8% / 0.1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-20px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(-10px) rotate(-1deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: var(--glow-primary);
+  }
+  100% {
+    box-shadow: var(--glow-secondary);
+  }
+}
+
+@keyframes rotate-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(220, 25%, 8%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    to bottom,
+    hsl(195, 100%, 50%),
+    hsl(270, 100%, 80%)
+  );
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    to bottom,
+    hsl(270, 100%, 80%),
+    hsl(320, 100%, 70%)
+  );
+}
+
+/* Selection */
+::selection {
+  background: hsl(195, 100%, 50% / 0.3);
+  color: hsl(210, 40%, 98%);
+}
+
+/* 3D Transform Utilities */
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
