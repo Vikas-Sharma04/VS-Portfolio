@@ -10,7 +10,7 @@ const projects = [
     id: 1,
     title: "TaskFlow",
     description:
-      "TaskFlow is a powerful productivity and task management platform built for focus and efficiency. It features smart filtering, Pomodoro timers, real-time updates, and adaptive Light/Dark UI for seamless organization. With full PWA (Progressive Web App) support, TaskFlow works offline and can be installed like a native app — keeping users productive anytime, anywhere.",
+      "TaskFlow is a productivity app that helps users manage tasks efficiently. It features smart filtering, Pomodoro timers, and real-time updates, with offline PWA support for uninterrupted workflow. Stay focused, organized, and productive anytime, anywhere.",
     tech: [
       "React.js",
       "TypeScript",
@@ -28,9 +28,10 @@ const projects = [
     id: 2,
     title: "OmniAI",
     description:
-      "OmniAI is an AI-powered content creation platform that integrates Google Gemini API to assist users in writing articles, generating blog titles, and optimizing resumes. It offers a personalized dashboard and real-time AI responses for a smooth workflow. Built for creators and professionals, OmniAI blends the power of AI with intuitive design to simplify content generation and productivity.",
+      "OmniAI is an AI-powered content creation platform that assists in writing articles, generating blog titles, and optimizing resumes using Google Gemini API. With real-time AI suggestions and a personalized dashboard, it streamlines content creation for creators and professionals.",
     tech: [
       "React.js",
+      "JavaScript",
       "Tailwind CSS",
       "Node.js",
       "Express",
@@ -46,7 +47,7 @@ const projects = [
     id: 3,
     title: "CollabX",
     description:
-      "CollabX is a next-gen collaboration hub that connects brands with influencers and content creators for paid partnerships, campaigns, and affiliate deals. It simplifies discovery, communication, and deal management through a clean, dynamic interface. Designed for both creators and brands, CollabX bridges the gap between opportunity and talent in the digital creator economy.",
+      "CollabX is a collaboration platform connecting brands with influencers for partnerships and campaigns. It simplifies discovery, communication, and deal management through an intuitive interface, bridging the gap between opportunity and talent in the creator economy.",
     tech: [
       "React.js",
       "TypeScript",
@@ -65,7 +66,7 @@ const projects = [
     id: 4,
     title: "EduTrade",
     description:
-      "EduTrade is an e-commerce platform tailored for college and university students to buy and sell textbooks, notes, and academic resources. It connects students across campuses, promoting a sustainable exchange ecosystem. With secure authentication, intuitive listings, and chat integration, EduTrade makes academic trading simple, safe, and efficient.",
+      "EduTrade is an e-commerce platform for students to buy and sell textbooks, notes, and academic resources. With secure authentication, chat integration, and intuitive listings, it creates a safe, efficient, and sustainable academic trading ecosystem.",
     tech: [
       "React.js",
       "TypeScript",
@@ -73,12 +74,13 @@ const projects = [
       "Node.js",
       "Express",
       "MongoDB",
+      "Socket.io",
       "ImageKit",
     ],
     image: edutradeImg,
     gradient: "from-indigo-500 to-purple-600",
-    github: "#",
-    live: "#",
+    github: "https://github.com/Vikas-Sharma04/EduTrade",
+    live: "https://edutrade-vs.vercel.app/",
   },
 ];
 

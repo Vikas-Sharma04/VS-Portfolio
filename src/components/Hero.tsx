@@ -40,11 +40,10 @@ const Hero = () => {
   }, []);
 
   const typingTexts = [
-    "I am Vikas Sharma — Developer. Creator. Innovator. ✨",
-    "Full Stack Developer 💻",
-    "Machine Learning Enthusiast 🤖",
-    "Problem Solver & DSA Explorer 🧩",
-    "Passionate Coder turning ideas into reality 🚀",
+    "Hi, I'm Vikas Sharma 👋",
+    "Full-Stack & AI Engineer building scalable systems 🤖",
+    "I help turn complex ideas into reliable software 💻",
+    "I design, build, and ship production-ready products 🚀",
   ];
 
   const scrollToNext = () => {
@@ -171,19 +170,19 @@ const Hero = () => {
             <br />
             <span className="ml-4 text-primary">role:</span>{" "}
             <span className="text-yellow-400">
-              "Full-Stack Developer & AI/ML Enthusiast"
+              "Full-Stack & AI Engineer"
             </span>
             ,
             <br />
-            <span className="ml-4 text-primary">passion:</span>{" "}
+            <span className="ml-4 text-primary">focus:</span>{" "}
             <span className="text-yellow-400">
-              "Building scalable web apps and solving real-world problems"
+              "Designing and building scalable, production-ready systems"
             </span>
             ,
             <br />
             <span className="ml-4 text-primary">expertise:</span>{" "}
             <span className="text-yellow-400">
-              ["Full-Stack Development", "DevOps", "DSA", "AI/ML"]
+              ["Full-Stack Development", "AI/ML Systems", "System Design"]
             </span>
             <br />
             <span className="text-muted-foreground">{"}"}</span>;
@@ -219,7 +218,7 @@ const Hero = () => {
           >
             <span className="relative z-10 flex items-center gap-2">
               <Mail className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-              Get In Touch
+              Let’s Build Something
             </span>
           </motion.button>
 

@@ -11,7 +11,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
   const [show, setShow] = useState(true);
 
   useEffect(() => {
-    const splashDuration = 10000; // total splash duration
+    const splashDuration = 3000; // total splash duration
     const timer = setTimeout(() => {
       // trigger fade-out
       setShow(false);
@@ -60,11 +60,9 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
           {/* Typing Effect */}
           <TypingEffect
             texts={[
-              "Crafting code into experiences...",
-              "Building ideas into reality...",
-              "Welcome to the VS-Verse 🚀",
+              "Welcome to the VS-Verse — Code. Create. Innovate. 🚀",
             ]}
-            speed={60}
+            speed={50}
             deleteSpeed={45}
             pauseDuration={300}
             className="text-white text-4xl text-center"

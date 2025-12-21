@@ -3,28 +3,27 @@ import { Code2, Rocket, Heart, Sparkles } from "lucide-react";
 
 const About = () => {
   const highlights = [
-    {
-      icon: Code2,
-      title: "Full-Stack Developer",
-      description: "Building modern web apps with scalable architecture",
-    },
-    {
-      icon: Rocket,
-      title: "Problem Solver",
-      description: "Strong DSA and algorithm skills for efficient solutions",
-    },
-    {
-      icon: Heart,
-      title: "Passionate Coder",
-      description:
-        "Writing clean, maintainable code across web and ML projects",
-    },
-    {
-      icon: Sparkles,
-      title: "Innovation Driven",
-      description: "Exploring cutting-edge tech including ML, AI, and cloud",
-    },
-  ];
+  {
+    icon: Code2,
+    title: "Full-Stack Developer",
+    description: "Building modern web apps with scalable, production-ready architecture",
+  },
+  {
+    icon: Rocket,
+    title: "Problem Solver",
+    description: "Designing efficient, scalable solutions to complex problems",
+  },
+  {
+    icon: Heart,
+    title: "Passionate Coder",
+    description: "Crafting maintainable, production-ready code for web and AI projects",
+  },
+  {
+    icon: Sparkles,
+    title: "Innovation Driven",
+    description: "Leveraging AI, ML, and cloud technologies to build impactful solutions",
+  },
+];
 
   return (
     <section className="py-32 relative">
@@ -81,11 +80,7 @@ const About = () => {
           className="mt-16 max-w-3xl mx-auto text-center"
         >
           <p className="text-lg text-muted-foreground leading-relaxed">
-            With a solid foundation in frontend and backend development, I bring
-            ideas to life through clean code, intuitive design, and seamless
-            user experiences. Outside of coding, I explore new technologies,
-            contribute to open-source projects, and stay updated on the latest
-            trends in web development and AI.
+            With a strong foundation in frontend and backend development, I build scalable, production-ready applications that solve real-world problems efficiently. Outside of coding, I explore new technologies, contribute to open-source projects, and stay ahead of trends in web development and AI.
           </p>
         </motion.div>
       </div>
