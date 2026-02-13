@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Menu, X, Home, User, Briefcase, Mail, Code } from "lucide-react";
 
 const Navbar = () => {
@@ -9,18 +9,23 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const navbarRef = useRef<HTMLDivElement>(null);
 
+  // 1. Scroll Progress Logic
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
-
-      // Scrolled for styling
       setScrolled(currentScroll > 50);
 
-      // Show/hide navbar based on scroll direction
       if (currentScroll > lastScroll && currentScroll > 100) {
-        setShowNavbar(false); // scrolling down
+        setShowNavbar(false); 
       } else {
-        setShowNavbar(true); // scrolling up
+        setShowNavbar(true); 
       }
       setLastScroll(currentScroll);
     };
@@ -40,18 +45,19 @@ const Navbar = () => {
   const scrollToSection = (href: string) => {
     const id = href.replace("#", "");
     const element = document.getElementById(id);
-
-    // Close mobile menu first
     setIsOpen(false);
 
     if (element) {
-      // wait 100ms to let menu collapse
       setTimeout(() => {
-        const offset = 80; // navbar height
-        const y =
-          element.getBoundingClientRect().top + window.pageYOffset - offset;
-        window.scrollTo({ top: y, behavior: "smooth" });
-      }, 100);
+        const offset = 80; 
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }, 10); 
     }
   };
 
@@ -60,14 +66,14 @@ const Navbar = () => {
       ref={navbarRef}
       initial={{ y: -100 }}
       animate={{ y: showNavbar ? 0 : -120 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-background/20 backdrop-blur-xl border-b border-border/30"
+          ? "bg-background/20 backdrop-blur-xl border-b border-border/30 shadow-lg"
           : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="container mx-auto px-6 py-4 flex items-center justify-between relative">
         {/* Logo */}
         <motion.div
           whileHover={{ scale: 1.05 }}
@@ -81,28 +87,28 @@ const Navbar = () => {
           />
         </motion.div>
 
-        {/* Desktop nav */}
+        {/* Desktop Nav */}
         <div className="hidden md:flex items-center space-x-8">
           {navItems.map((item) => (
             <motion.button
               key={item.name}
               onClick={() => scrollToSection(item.href)}
-              className="relative group text-foreground hover:text-primary transition-colors duration-300 cursor-hover"
+              className="relative group text-foreground hover:text-primary transition-colors duration-300 cursor-hover py-2"
               whileHover={{ y: -2 }}
               whileTap={{ y: 0 }}
             >
-              <span className="relative z-10">{item.name}</span>
+              <span className="relative z-10 font-medium">{item.name}</span>
               <motion.div
-                className="absolute inset-0 bg-primary/20 rounded-lg -z-10"
+                className="absolute inset-0 bg-primary/10 rounded-lg -z-10"
                 initial={{ scale: 0, opacity: 0 }}
-                whileHover={{ scale: 1, opacity: 1 }}
+                whileHover={{ scale: 1.1, opacity: 1 }}
                 transition={{ duration: 0.2 }}
               />
             </motion.button>
           ))}
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Button */}
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={() => setIsOpen(!isOpen)}
@@ -112,30 +118,38 @@ const Navbar = () => {
         </motion.button>
       </div>
 
-      {/* Mobile nav links */}
+      {/* 2. Animated Progress Bar */}
+      <motion.div
+        className="h-[3px] bg-gradient-to-r from-primary via-purple-500 to-pink-500 origin-left"
+        style={{ scaleX }}
+      />
+
+      {/* Mobile Nav Drawer */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden mt-4 pb-4"
+            initial={{ opacity: 0, height: 0, y: -20 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden overflow-hidden"
           >
-            <div className="card-glass p-4 rounded-2xl">
-              {navItems.map((item, index) => (
-                <motion.button
-                  key={item.name}
-                  onClick={() => scrollToSection(item.href)}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-primary/20 transition-colors duration-300 cursor-hover"
-                >
-                  <item.icon size={20} className="text-primary" />
-                  <span>{item.name}</span>
-                </motion.button>
-              ))}
+            <div className="px-6 pb-6 pt-2">
+              <div className="card-glass p-4 rounded-2xl border border-white/10 bg-black/80 backdrop-blur-2xl">
+                {navItems.map((item, index) => (
+                  <motion.button
+                    key={item.name}
+                    onClick={() => scrollToSection(item.href)}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="flex items-center space-x-4 w-full p-4 rounded-xl hover:bg-primary/20 transition-all duration-300 group cursor-hover text-white"
+                  >
+                    <item.icon size={20} className="text-primary group-hover:scale-110 transition-transform" />
+                    <span className="font-medium">{item.name}</span>
+                  </motion.button>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
   MapPin,
@@ -6,232 +6,235 @@ import {
   Send,
   Github,
   Linkedin,
-  Twitter,
   Loader2,
+  CheckCircle2,
 } from "lucide-react";
 import emailjs from "@emailjs/browser";
 import { useRef, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 const Contact = () => {
-  const formRef = useRef<HTMLFormElement>(null); // ✅ Add type here
+  const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
   const [isSending, setIsSending] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!formRef.current) return; // ✅ Safety check
+    if (!formRef.current) return;
+    
     setIsSending(true);
 
-    emailjs
-      .sendForm(
+    try {
+      await emailjs.sendForm(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        formRef.current, // ✅ Now TypeScript knows it's not undefined
+        formRef.current,
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-      )
-      .then(
-        () => {
-          toast({
-            title: "Message Sent 🎉",
-            description: "Your message has been successfully delivered.",
-          });
-          formRef.current?.reset(); // ✅ Optional chaining (extra safety)
-          setIsSending(false);
-        },
-        (error) => {
-          console.error("Email sending failed:", error.text);
-          toast({
-            title: "Error ❌",
-            description: "Failed to send your message. Please try again later.",
-            variant: "destructive",
-          });
-          setIsSending(false);
-        }
       );
+
+      setIsSuccess(true);
+      toast({
+        title: "Message Sent 🎉",
+        description: "I'll get back to you as soon as possible.",
+      });
+      formRef.current.reset();
+      
+      // Reset success state after 5 seconds to allow new messages
+      setTimeout(() => setIsSuccess(false), 5000);
+    } catch (error) {
+      toast({
+        title: "Submission Failed",
+        description: "Something went wrong. Please email me directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSending(false);
+    }
   };
 
+  const contactData = [
+    { 
+      icon: Mail, 
+      label: "Email", 
+      value: "vikassharma141246@gmail.com", 
+      href: "mailto:vikassharma141246@gmail.com",
+      gradient: "from-blue-500 to-cyan-400" 
+    },
+    { 
+      icon: Phone, 
+      label: "Phone", 
+      value: "+91 8368078785", 
+      href: "tel:+918368078785",
+      gradient: "from-purple-500 to-pink-400" 
+    },
+    { 
+      icon: MapPin, 
+      label: "Location", 
+      value: "New Delhi, India", 
+      href: "https://maps.google.com/?q=New+Delhi",
+      gradient: "from-orange-500 to-yellow-400" 
+    },
+  ];
+
   return (
-    <section className="py-32 relative overflow-hidden">
-      <div className="container mx-auto px-6">
+    <section id="contact" className="py-24 relative overflow-hidden">
+      {/* Refined Background Gradients */}
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-secondary/10 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="container mx-auto px-6 relative z-10">
         <motion.div
-          initial={{ y: 50, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-20"
+          className="max-w-4xl mx-auto text-center mb-16"
         >
-          <h2 className="text-section-title mb-6">
-            Let's Create Something Amazing
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
+            Let's <span className="text-primary">Connect</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Ready to bring your ideas to life? Let's collaborate and build the
-            future together.
+          <p className="text-lg text-muted-foreground">
+            Have a project in mind or just want to say hi? My inbox is always open.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 max-w-6xl mx-auto px-4 sm:px-6">
-          {/* Contact Info */}
-          <motion.div
-            initial={{ x: -50, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-8"
-          >
-            <h3 className="text-3xl font-bold mb-8">Get In Touch</h3>
-
-            <div className="space-y-4 sm:space-y-6">
-              {/* Email */}
-              <motion.div
-                className="flex flex-wrap sm:flex-nowrap items-center gap-4 p-4 card-glass cursor-hover"
-                whileHover={{ x: 10, scale: 1.02 }}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-6xl mx-auto">
+          {/* Contact Details (Left) */}
+          <div className="lg:col-span-5 space-y-6">
+            {contactData.map((item, i) => (
+              <motion.a
+                key={i}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="group flex items-center gap-5 p-5 rounded-2xl bg-secondary/5 border border-white/5 hover:border-primary/50 hover:bg-secondary/10 transition-all duration-300"
               >
-                <div className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Mail className="w-6 h-6 text-white" />
+                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} p-[1px]`}>
+                  <div className="w-full h-full bg-background rounded-[11px] flex items-center justify-center">
+                    <item.icon className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
+                  </div>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm text-muted-foreground">Email</p>
-                  <p className="font-medium break-words leading-snug">
-                    vikassharma141246@gmail.com
+                <div>
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
+                    {item.label}
                   </p>
+                  <p className="text-lg font-medium">{item.value}</p>
                 </div>
-              </motion.div>
+              </motion.a>
+            ))}
 
-              {/* Phone */}
-              <motion.div
-                className="flex flex-wrap sm:flex-nowrap items-center gap-4 p-4 card-glass cursor-hover"
-                whileHover={{ x: 10, scale: 1.02 }}
-              >
-                <div className="w-12 h-12 bg-gradient-to-r from-secondary to-accent rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-6 h-6 text-white" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm text-muted-foreground">Phone</p>
-                  <p className="font-medium break-words leading-snug">
-                    +91 8368078785
-                  </p>
-                </div>
-              </motion.div>
-
-              {/* Location */}
-              <motion.div
-                className="flex flex-wrap sm:flex-nowrap items-center gap-4 p-4 card-glass cursor-hover"
-                whileHover={{ x: 10, scale: 1.02 }}
-              >
-                <div className="w-12 h-12 bg-gradient-to-r from-accent to-primary rounded-lg flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-6 h-6 text-white" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm text-muted-foreground">Location</p>
-                  <p className="font-medium break-words leading-snug">
-                    New Delhi, India
-                  </p>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Social Links */}
-            <div className="pt-8">
-              <h4 className="text-lg font-semibold mb-4">Connect With Me</h4>
+            <div className="pt-6">
+              <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-4">Follow Me</p>
               <div className="flex gap-4">
                 {[
-                  {
-                    icon: Github,
-                    href: "https://github.com/Vikas-Sharma04",
-                    color: "hover:text-primary",
-                  },
-                  {
-                    icon: Linkedin,
-                    href: "https://www.linkedin.com/in/vikas-sharma-01851a344/",
-                    color: "hover:text-secondary",
-                  },
-                ].map(({ icon: Icon, href, color }, index) => (
+                  { icon: Github, href: "https://github.com/Vikas-Sharma04" },
+                  { icon: Linkedin, href: "https://www.linkedin.com/in/vikas-sharma-01851a344/" }
+                ].map((social, i) => (
                   <motion.a
-                    key={index}
-                    href={href}
-                    className={`w-12 h-12 bg-muted/20 rounded-lg flex items-center justify-center text-muted-foreground transition-colors cursor-hover ${color}`}
-                    whileHover={{ y: -5, scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
+                    key={i}
+                    href={social.href}
+                    whileHover={{ y: -4 }}
+                    className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center border border-white/10 hover:border-primary transition-colors"
                   >
-                    <Icon className="w-5 h-5" />
+                    <social.icon size={20} />
                   </motion.a>
                 ))}
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Contact Form */}
+          {/* Contact Form (Right) */}
           <motion.div
-            initial={{ x: 50, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="card-glass p-6 sm:p-8 mt-8 lg:mt-0"
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="lg:col-span-7"
           >
-            <h3 className="text-2xl font-bold mb-6">Send a Message</h3>
+            <form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              className="bg-secondary/5 border border-white/10 p-8 rounded-3xl backdrop-blur-sm relative"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium ml-1">Name</label>
+                  <input
+                    name="from_name"
+                    type="text"
+                    required
+                    placeholder="John Doe"
+                    className="w-full px-4 py-3 rounded-xl bg-background/50 border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium ml-1">Email</label>
+                  <input
+                    name="from_email"
+                    type="email"
+                    required
+                    placeholder="john@example.com"
+                    className="w-full px-4 py-3 rounded-xl bg-background/50 border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                  />
+                </div>
+              </div>
 
-            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-              <motion.div whileFocus={{ scale: 1.02 }}>
-                <input
-                  type="text"
-                  name="from_name"
-                  placeholder="Your Name"
-                  required
-                  className="w-full px-4 py-3 bg-muted/20 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-                />
-              </motion.div>
-              <motion.div whileFocus={{ scale: 1.02 }}>
-                <input
-                  type="email"
-                  name="from_email"
-                  placeholder="Your Email"
-                  required
-                  className="w-full px-4 py-3 bg-muted/20 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-                />
-              </motion.div>
-
-              <motion.div whileFocus={{ scale: 1.02 }}>
+              <div className="space-y-2 mb-8">
+                <label className="text-sm font-medium ml-1">Message</label>
                 <textarea
-                  rows={6}
                   name="message"
-                  placeholder="Your Message"
                   required
-                  className="w-full px-4 py-3 bg-muted/20 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
+                  rows={5}
+                  placeholder="How can I help you?"
+                  className="w-full px-4 py-3 rounded-xl bg-background/50 border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none"
                 />
-              </motion.div>
+              </div>
 
-              <motion.button
+              <button
                 type="submit"
-                disabled={isSending}
-                className={`w-full btn-secondary cursor-hover group transition-all ${
-                  isSending ? "opacity-70 cursor-not-allowed" : ""
-                }`}
-                whileHover={{ scale: isSending ? 1 : 1.02 }}
-                whileTap={{ scale: isSending ? 1 : 0.98 }}
+                disabled={isSending || isSuccess}
+                className="w-full relative py-4 bg-primary text-primary-foreground font-bold rounded-xl overflow-hidden group disabled:opacity-80"
               >
-                <span className="flex items-center justify-center gap-2">
+                <AnimatePresence mode="wait">
                   {isSending ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      Sending...
-                    </>
+                    <motion.div
+                      key="loading"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center justify-center gap-2"
+                    >
+                      <Loader2 className="animate-spin" size={20} />
+                      Sending Message...
+                    </motion.div>
+                  ) : isSuccess ? (
+                    <motion.div
+                      key="success"
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      className="flex items-center justify-center gap-2"
+                    >
+                      <CheckCircle2 size={20} />
+                      Sent Successfully!
+                    </motion.div>
                   ) : (
-                    <>
-                      <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+                    <motion.div
+                      key="default"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="flex items-center justify-center gap-2"
+                    >
+                      <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                       Send Message
-                    </>
+                    </motion.div>
                   )}
-                </span>
-              </motion.button>
+                </AnimatePresence>
+              </button>
             </form>
           </motion.div>
         </div>
       </div>
-
-      {/* Background Effects */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-full blur-3xl animate-pulse-glow"></div>
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-tl from-accent/10 to-primary/10 rounded-full blur-3xl animate-float"></div>
     </section>
   );
 };

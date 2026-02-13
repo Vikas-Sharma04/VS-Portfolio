@@ -14,125 +14,125 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Index = () => {
   useEffect(() => {
-    // Enhanced smooth scroll setup with Lenis
-    const initSmoothScroll = async () => {
+    let lenis;
+
+    const initScrollAndAnims = async () => {
+      // 1. Initialize Lenis Smooth Scroll
       const Lenis = (await import("lenis")).default;
-      const lenis = new Lenis({
-        duration: 1.6,
+      lenis = new Lenis({
+        duration: 1.4,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
-        touchMultiplier: 2,
       });
-      function raf(time: number) {
+
+      function raf(time) {
         lenis.raf(time);
         requestAnimationFrame(raf);
       }
       requestAnimationFrame(raf);
 
-      // Connect Lenis with GSAP ScrollTrigger for enhanced animations
+      // 2. Sync GSAP with Lenis
       lenis.on("scroll", ScrollTrigger.update);
       gsap.ticker.add((time) => {
         lenis.raf(time * 1000);
       });
       gsap.ticker.lagSmoothing(0);
 
-      // Enhanced scroll-triggered animations
-      ScrollTrigger.create({
-        trigger: "#skills",
-        start: "top 80%",
-        end: "bottom 20%",
-        onEnter: () => {
-          gsap.fromTo(
-            "#skills .skill-badge",
-            {
-              y: 50,
-              opacity: 0,
-              scale: 0.8,
-            },
-            {
-              y: 0,
-              opacity: 1,
-              scale: 1,
-              duration: 0.8,
-              stagger: 0.1,
-              ease: "back.out(1.7)",
-            }
+      // 3. REVEAL ANIMATIONS LOGIC
+      
+      // Reveal for Section Headers (Title & Subtitle)
+      const sectionHeaders = document.querySelectorAll(".reveal-header");
+      sectionHeaders.forEach((header) => {
+        gsap.from(header, {
+          scrollTrigger: {
+            trigger: header,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+          y: 60,
+          opacity: 0,
+          duration: 1,
+          ease: "power4.out",
+        });
+      });
+
+      // Stagger Reveal for Skills
+      ScrollTrigger.batch("#skills .skill-badge", {
+        start: "top 85%",
+        onEnter: (elements) => {
+          gsap.fromTo(elements, 
+            { y: 40, opacity: 0, scale: 0.9 },
+            { y: 0, opacity: 1, scale: 1, stagger: 0.05, duration: 0.8, ease: "back.out(1.7)", overwrite: true }
           );
         },
       });
-      ScrollTrigger.create({
-        trigger: "#projects",
+
+      // Stagger Reveal for Project Cards
+      ScrollTrigger.batch("#projects .card-project", {
         start: "top 80%",
-        end: "bottom 20%",
-        onEnter: () => {
-          gsap.fromTo(
-            "#projects .card-project",
-            {
-              y: 100,
-              opacity: 0,
-              rotationY: 45,
-            },
-            {
-              y: 0,
-              opacity: 1,
-              rotationY: 0,
-              duration: 1,
-              stagger: 0.2,
-              ease: "power3.out",
-            }
+        onEnter: (elements) => {
+          gsap.fromTo(elements,
+            { y: 80, opacity: 0, rotationX: -10 },
+            { y: 0, opacity: 1, rotationX: 0, stagger: 0.15, duration: 1.2, ease: "power3.out", overwrite: true }
           );
         },
+      });
+
+      // Generic "Reveal Up" class for any other content
+      const reveals = document.querySelectorAll(".reveal-up");
+      reveals.forEach((el) => {
+        gsap.from(el, {
+          scrollTrigger: {
+            trigger: el,
+            start: "top 90%",
+          },
+          y: 40,
+          opacity: 0,
+          duration: 1,
+          ease: "power2.out",
+        });
       });
     };
-    initSmoothScroll();
 
-    // Cleanup
+    initScrollAndAnims();
+
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      if (lenis) lenis.destroy();
+      ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
+
   return (
-    <div className="relative">
+    <div className="relative overflow-x-hidden">
       <CustomCursor />
       <Background3D />
       <Navbar />
 
       <main className="relative z-10">
-        <div id="home">
-          <Hero />
-        </div>
-        <div id="about">
-          <About />
-        </div>
-        <div id="skills">
-          <SkillsConstellation />
-        </div>
-        <div id="projects">
-          <ProjectsShowcase />
-        </div>
-        <div id="contact">
-          <Contact />
-        </div>
+        <section id="home"><Hero /></section>
+        
+        {/* Added reveal-up class to wrapper for About */}
+        <section id="about" className="reveal-up"><About /></section>
+        
+        <section id="skills"><SkillsConstellation /></section>
+        
+        <section id="projects"><ProjectsShowcase /></section>
+        
+        <section id="contact" className="reveal-up"><Contact /></section>
       </main>
 
-      {/* Enhanced Footer */}
       <footer className="relative z-10 border-t border-border/50 py-12 bg-gradient-to-t from-background to-background/90">
-        <div className="container mx-auto px-6">
-          <div className="text-center">
-            <div className="mb-6">
-              <h3 className="text-2xl font-bold text-primary mb-2">
-                Vikas Sharma
-              </h3>
-              <p className="text-muted-foreground">
-                Full-Stack Developer & Digital Creator
-              </p>
-            </div>
-
-            <p className="text-muted-foreground text-sm">
-              © {new Date().getFullYear()} Vikas Sharma. Crafted with 💜 using
-              React, Three.js & GSAP
-            </p>
+        <div className="container mx-auto px-6 text-center">
+          <div className="mb-6 reveal-up">
+            <h3 className="text-3xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50 mb-2">
+              Vikas <span className="text-primary italic tracking-normal">Sharma</span>
+            </h3>
+            <p className="text-muted-foreground">Full-Stack & AI/ML Developer</p>
           </div>
+          <p className="text-muted-foreground text-sm">
+            © {new Date().getFullYear()} Vikas Sharma. Crafted with 💜 using
+              React, Three.js & GSAP
+          </p>
         </div>
       </footer>
     </div>

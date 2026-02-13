@@ -1,182 +1,120 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
+import { motion, useSpring, useMotionValue, AnimatePresence } from "framer-motion";
 
-const NUM_TRAILS = 10;
-const STAR_COLORS = [
-  "#FF5F6D",
-  "#FFC371",
-  "#6A82FB",
-  "#FC5C7D",
-  "#00F260",
-  "#0575E6",
-];
-
-interface Star {
-  id: number;
-  x: number;
-  y: number;
-  size: number;
-  opacity: number;
-  color: string;
-  offsetX: number;
-  offsetY: number;
-}
+const STAR_COLORS = ["#818cf8", "#c084fc", "#fb7185", "#22d3ee"];
 
 const CustomCursor = () => {
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
-  const [stars, setStars] = useState<Star[]>([]);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isClicking, setIsClicking] = useState(false);
+  const cursorRef = useRef<HTMLDivElement>(null);
 
-  // Detect mobile
-  useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  // High-performance motion values
+  const mouseX = useMotionValue(-100);
+  const mouseY = useMotionValue(-100);
 
-  // Mouse/touch tracking
+  // Smooth springs with "Magnetic" feel
+  const springConfig = { damping: 20, stiffness: 300, mass: 0.5 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isMobile) {
-        setMouse({ x: e.clientX, y: e.clientY });
-        addStar(e.clientX, e.clientY);
-      }
+    const moveMouse = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (isMobile) {
-        const touch = e.touches[0];
-        setMouse({ x: touch.clientX, y: touch.clientY });
-        addStar(touch.clientX, touch.clientY);
-      }
-    };
+    const handleMouseDown = () => setIsClicking(true);
+    const handleMouseUp = () => setIsClicking(false);
 
-    const handleMouseOver = (e: MouseEvent) => {
+    const handleHover = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      setIsHovering(!!target.closest("button, a, .cursor-hover"));
+      const isSelectable = !!target.closest("button, a, .cursor-hover, .card-project, input");
+      setIsHovering(isSelectable);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("touchmove", handleTouchMove, { passive: true });
-    window.addEventListener("mouseover", handleMouseOver);
+    window.addEventListener("mousemove", moveMouse);
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("mouseover", handleHover);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("mouseover", handleMouseOver);
+      window.removeEventListener("mousemove", moveMouse);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("mouseover", handleHover);
     };
-  }, [isMobile]);
-
-  const addStar = (x: number, y: number) => {
-    const newStar: Star = {
-      id: Date.now() + Math.random(),
-      x,
-      y,
-      size: Math.random() * 3 + 2,
-      opacity: 1,
-      color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
-      offsetX: Math.random() * 20 - 10,
-      offsetY: Math.random() * 20 - 10,
-    };
-    setStars((prev) => [...prev, newStar].slice(-NUM_TRAILS));
-  };
-
-  // Animate stars fading/moving
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStars((prev) =>
-        prev
-          .map((s) => ({
-            ...s,
-            x: s.x + s.offsetX * 0.05,
-            y: s.y + s.offsetY * 0.05,
-            opacity: s.opacity - 0.05,
-          }))
-          .filter((s) => s.opacity > 0)
-      );
-    }, 20);
-    return () => clearInterval(interval);
-  }, []);
+  }, [mouseX, mouseY]);
 
   return (
-    <>
-      {/* Main Blue Cursor for Desktop */}
-      {!isMobile && (
-        <motion.div
-          className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-50 shadow-lg"
-          style={{
-            x: mouse.x - 16,
-            y: mouse.y - 16,
-            backgroundColor: "#1E90FF",
-            boxShadow: "0 0 12px rgba(30,144,255,0.8)",
-          }}
+    <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
+      {/* 1. The Magnetic Aura (Follower) */}
+      <motion.div
+        className="absolute top-0 left-0 rounded-full blur-[20px] opacity-30"
+        style={{
+          x: smoothX,
+          y: smoothY,
+          translateX: "-50%",
+          translateY: "-50%",
+          width: isHovering ? 120 : 60,
+          height: isHovering ? 120 : 60,
+          background: `radial-gradient(circle, ${STAR_COLORS[0]}, ${STAR_COLORS[1]})`,
+        }}
+        transition={{ type: "spring", bounce: 0.3 }}
+      />
+
+      {/* 2. The Main Fluid Ring */}
+      <motion.div
+        style={{
+          x: smoothX,
+          y: smoothY,
+          translateX: "-50%",
+          translateY: "-50%",
+        }}
+        animate={{
+          scale: isClicking ? 0.8 : isHovering ? 1.5 : 1,
+          rotate: isClicking ? 90 : 0,
+        }}
+        className="absolute top-0 left-0 w-10 h-10 border border-white/40 rounded-full flex items-center justify-center"
+      >
+        {/* Inner core that glows on hover */}
+        <motion.div 
           animate={{
-            scale: isHovering ? 1.8 : 1,
-            rotate: isHovering ? 45 : 0,
+            scale: isHovering ? 0.5 : 0,
+            opacity: isHovering ? 1 : 0
           }}
-          transition={{ type: "spring", stiffness: 500, damping: 28 }}
+          className="w-full h-full bg-white rounded-full blur-[2px]"
         />
-      )}
+      </motion.div>
 
-      {/* Star Trails */}
+      {/* 3. The "Ghost" Dot (Zero Latency) */}
+      <motion.div
+        style={{
+          x: mouseX,
+          y: mouseY,
+          translateX: "-50%",
+          translateY: "-50%",
+        }}
+        className="absolute top-0 left-0 w-1 h-1 bg-white rounded-full mix-blend-difference"
+      />
+
+      {/* 4. Click Ripple Effect */}
       <AnimatePresence>
-        {stars.map((star) => (
+        {isClicking && (
           <motion.div
-            key={star.id}
-            className="fixed rounded-full pointer-events-none"
-            style={{
-              width: star.size,
-              height: star.size,
-              x: star.x - star.size / 2,
-              y: star.y - star.size / 2,
-              backgroundColor: star.color,
-              opacity: star.opacity,
-              boxShadow: `0 0 ${star.size * 2}px ${star.color}`,
-            }}
-            animate={{
-              x: star.x + star.offsetX,
-              y: star.y + star.offsetY,
-              opacity: 0,
-              scale: [1, 1.2, 1],
-            }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            initial={{ scale: 0.5, opacity: 1 }}
+            animate={{ scale: 2.5, opacity: 0 }}
             exit={{ opacity: 0 }}
+            style={{
+              x: mouseX,
+              y: mouseY,
+              translateX: "-50%",
+              translateY: "-50%",
+            }}
+            className="absolute top-0 left-0 w-10 h-10 border border-primary rounded-full"
           />
-        ))}
+        )}
       </AnimatePresence>
-
-      {/* Hover ring for desktop */}
-      {!isMobile && isHovering && (
-        <motion.div
-          className="fixed top-0 left-0 w-24 h-24 rounded-full pointer-events-none z-40 border-2"
-          style={{
-            x: mouse.x - 48,
-            y: mouse.y - 48,
-            borderColor: "#1E90FF",
-          }}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.25 }}
-          exit={{ scale: 0, opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        />
-      )}
-
-      {/* Subtle Blue Circle Trail for Mobile */}
-      {isMobile && (
-        <motion.div
-          className="fixed top-0 left-0 w-12 h-12 rounded-full pointer-events-none z-50"
-          style={{
-            x: mouse.x - 6,
-            y: mouse.y - 6,
-            backgroundColor: "rgba(30,144,255,0.3)",
-          }}
-          animate={{ scale: [0.8, 1, 0.8], opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 0.5, repeat: Infinity }}
-        />
-      )}
-    </>
+    </div>
   );
 };
 
