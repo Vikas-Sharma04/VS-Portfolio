@@ -14,6 +14,9 @@ import sudokusolverImg from "@/assets/sudokusolver.png";
 import simongameImg from "@/assets/simongame.png";
 import drumkitImg from "@/assets/drumkit.png";
 import keeperImg from "@/assets/keeper.png";
+import documindaiImg from "@/assets/documindai.png";
+import researchmindImg from "@/assets/researchmind.png";
+import vislidesImg from "@/assets/vislides.png";
 
 const projects = [
   {
@@ -30,6 +33,54 @@ const projects = [
   },
   {
     id: 2,
+    title: "VI-Slides",
+    category: "Web Dev",
+    description:
+      "VI-Slides is a real-time student-teacher interaction platform enabling live sessions with screen sharing, audio, whiteboard, polls, assignments, AI powered Q&A, todos, and notifications. Built using WebRTC and Socket.IO for low-latency, seamless real-time communication.",
+    tech: ["React.js", "WebRTC", "Socket.IO", "Node.js", "Express.js", "Tailwind CSS", "TypeScript"],
+    image: vislidesImg,
+    gradient: "from-violet-500 to-purple-600",
+    github: "https://github.com/Vikas-Sharma04/Vi-Slides",
+    live: "https://vi-slides-vs.vercel.app",
+  },
+  {
+    id: 3,
+    title: "DocuMind AI",
+    category: "AI/ML",
+    description:
+      "DocuMind AI is a premium platform transforming PDFs into interactive partners using LangChain, ChromaDB, and RAG. It features a sleek dark UI, automated ingestion with real-time vector processing, and three intelligent modes: Chat for general queries, RAG Search for fact-finding, and Consultant mode for thematic analysis.",
+      tech: ["LangChain", "ChromaDB", "RAG", "Python", "Streamlit", "Vector Processing"],
+      image: documindaiImg,
+    gradient: "from-blue-500 to-cyan-600",
+    github: "https://github.com/Vikas-Sharma04/DocuMind-AI",
+    live: "https://docu-mind-ai-vs.streamlit.app/",
+  },
+  {
+    id: 4,
+    title: "AnalyticaX",
+    category: "Python",
+    description:
+      "AnalyticaX is an advanced data analytics platform that transforms raw datasets into interactive dashboards and automated statistical summaries. Supports dynamic filtering, aggregation, and visualization using Plotly and Streamlit for business-ready insights. Also integrated with an AI-powered code editor.",
+    tech: ["Python", "Pandas", "NumPy", "Plotly", "Matplotlib", "Streamlit"],
+    image: analyticaxImg,
+    gradient: "from-emerald-500 to-teal-600",
+    github: "https://github.com/Vikas-Sharma04/AnalyticaX",
+    live: "https://analyticax.streamlit.app/",
+  },
+  {
+    id: 5,
+    title: "ResearchMind",
+    category: "AI/ML",
+    description:
+      "Advanced multi-agent AI research system powered by Mistral, Tavily, and BeautifulSoup. This platform features a dynamic horizontal pipeline where specialized agents collaborate to search, scrape, write, and critique deep technical reports in real-time. Built with LangChain and Streamlit for professional, high-speed research.",
+    tech: ["Mistral", "Tavily", "BeautifulSoup", "LangChain", "Python", "Streamlit"],
+    image: researchmindImg,
+    gradient: "from-amber-500 to-orange-600",
+    github: "https://github.com/Vikas-Sharma04/ResearchMind",
+    live: "https://researchmind-vs.streamlit.app/",
+  },
+  {
+    id: 6,
     title: "CollabX",
     category: "Web Dev",
     description:
@@ -41,9 +92,9 @@ const projects = [
     live: "https://collabx-vs.vercel.app/",
   },
   {
-    id: 3,
+    id: 7,
     title: "IPL Match Predictor",
-    category: "ML",
+    category: "AI/ML",
     description:
       "A machine learning-driven prediction engine that estimates second-innings IPL scores using advanced feature engineering on match metrics like run rate, wickets, and venue patterns. Integrated into an interactive Streamlit application for real-time predictive analytics.",
     tech: ["Python", "Scikit-Learn", "Pandas", "NumPy", "Matplotlib", "Streamlit"],
@@ -53,19 +104,7 @@ const projects = [
     live: "https://ipl-match-score-predictor-vs.streamlit.app/",
   },
   {
-    id: 4,
-    title: "AnalyticaX",
-    category: "Python",
-    description:
-      "AnalyticaX is an advanced data analytics platform that transforms raw datasets into interactive dashboards and automated statistical summaries. Supports dynamic filtering, aggregation, and visualization using Plotly and Streamlit for business-ready insights.",
-    tech: ["Python", "Pandas", "NumPy", "Plotly", "Matplotlib", "Streamlit"],
-    image: analyticaxImg,
-    gradient: "from-emerald-500 to-teal-600",
-    github: "https://github.com/Vikas-Sharma04/AnalyticaX",
-    live: "https://analyticax.streamlit.app/",
-  },
-  {
-    id: 5,
+    id: 8,
     title: "RecipeHub",
     category: "Web Dev",
     description:
@@ -77,7 +116,7 @@ const projects = [
     live: "https://recipe-hub-vs.vercel.app/",
   },
   {
-    id: 6,
+    id: 9,
     title: "OmniAI",
     category: "Web Dev",
     description:
@@ -89,7 +128,7 @@ const projects = [
     live: "https://omni-ai-zeta.vercel.app",
   },
   {
-    id: 7,
+    id: 10,
     title: "Snake Game",
     category: "Python",
     description:
@@ -101,7 +140,7 @@ const projects = [
     live: "https://snake-game-pygame.vercel.app/",
   },
   {
-    id: 8,
+    id: 11,
     title: "TaskFlow",
     category: "Web Dev",
     description:
@@ -113,7 +152,7 @@ const projects = [
     live: "https://taskflow-vs.vercel.app/",
   },
   {
-    id: 9,
+    id: 12,
     title: "Sudoku Solver",
     category: "Mini Projects",
     description:
@@ -125,7 +164,7 @@ const projects = [
     live: "http://sudoku-solver-vs.vercel.app/",
   },
   {
-    id: 10,
+    id: 13,
     title: "Simon Game",
     category: "Mini Projects",
     description:
@@ -137,7 +176,7 @@ const projects = [
     live: "https://vikas-sharma04.github.io/SimonGame/",
   },
   {
-    id: 11,
+    id: 14,
     title: "DrumKit",
     category: "Mini Projects",
     description:
@@ -149,7 +188,7 @@ const projects = [
     live: "https://vikas-sharma04.github.io/DrumKit/",
   },
   {
-    id: 12,
+    id: 15,
     title: "Keeper App",
     category: "Mini Projects",
     description:
@@ -162,7 +201,7 @@ const projects = [
   },
 ];
 
-const categories = ["All", "Web Dev", "ML", "Python", "Mini Projects"];
+const categories = ["All", "Web Dev", "AI/ML", "Python", "Mini Projects"];
 
 const ProjectsShowcase = () => {
   const [activeCategory, setActiveCategory] = useState("All");
